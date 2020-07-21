@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet, ViewStyle } from 'react-native'
 import dayJs from 'dayjs'
 import React, { useState, useEffect, useMemo } from 'react'
-import { DatePicker } from 'antd-mobile-rn'
+import { DatePicker } from '@ant-design/react-native'
 import { observer } from 'mobx-react'
 
 interface Props {
