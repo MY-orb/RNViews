@@ -1,0 +1,55 @@
+{
+  "name": "RNCommonView",
+  "version": "0.0.1",
+  "description": "RN常用组件",
+  "main": "src/index.tsx",
+  "scripts": {
+    "postversion": "git push --tags && git push && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wyd-4219/RNCommonViews.git"
+  },
+  "author": {
+    "name": "王以栋",
+    "email": "wyd_4219@163.com"
+  },
+  "devDependencies": {
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0"
+  },
+  "dependencies": {
+    "react": "16.8.3",
+    "react-native": "0.59.9",
+    "mobx": "^5.15.4",
+    "mobx-react": "^6.1.8",
+    "@ant-design/icons-react-native": "1.0.2",
+    "@ant-design/react-native": "^4.0.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@wyd"
+    ],
+    "env": {
+      "react-native/react-native": true
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "**/*.{md,json}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}

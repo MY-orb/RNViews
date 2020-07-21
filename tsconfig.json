@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["types/*"],
+      "~/*": ["app/*"]
+    },
+    "target": "esnext",
+    "module": "commonjs",
+    "allowJs": true, // 是否允许编译JS文件
+    "checkJs": true, // 是否检查和报告JS文件中的错误
+    "jsx": "react-native",
+    "removeComments": true, // 将编译后的文件注释删掉
+    "strict": true, // 启动所有类型检查
+    "noEmit": true, // 不生成编译文件
+    "noImplicitAny": false, // 如果我们没有一些值设置明确类型，编译器会默认认为这个值为any类型
+    "allowSyntheticDefaultImports": true, // 允许从没有默认导出的模块中默认导入
+    "esModuleInterop": true, // 通过导入内容创建命名空间，实现CommonJS和ES模块之间的互操作性
+    "experimentalDecorators": true, // 开启装饰器
+    "emitDecoratorMetadata": true, // 是否为装上去提供元数据支持，关于元数据，也是ES6的新标准，可以通过Reflect提供的静态方法获取元数据，如果需要使用Reflect的一些方法，需要引用ES2015.Reflect这个库
+    "skipLibCheck": true, // 跳过声明文件的类型检查
+    "resolveJsonModule": true // 导入以“ .json”扩展名的模块
+  },
+  "exclude": ["node_modules", "index.js"]
+}
