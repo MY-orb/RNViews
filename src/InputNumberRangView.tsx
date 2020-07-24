@@ -1,24 +1,44 @@
 import { Text, View, StyleSheet, TextInput, ViewStyle } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
-import { Toast } from '@sishuguojixuefu/antd-mobile-rn'
+import { Toast } from '@ant-design/react-native'
 
 interface Props {
-    minValue?: string // 最大输入值
-    maxValue?: string // 最小输入值
+    inputTitle: string // 标题
     initialStartValue?: string // 初始开始值
     initialEndValue?: string // 初始结束值
-    inputTitle: string // 标题
-    style?: ViewStyle
     onChangeStartValue?: (value) => void // 开始值监听
     onChangeEndValue?: (value) => void // 结束值监听
+
+    minValue?: number // 最小输入值
+    maxValue?: number // 最大输入值
     last?: boolean // 是否有底部分割线
     placeholderStr?: string // 开始输入框的提示语
     placeholderEnd?: string // 结束输入框的提示语
+    style?: ViewStyle // 输入组件View样式
+    leftStyle?: ViewStyle // 左边输入框样式
+    rightStyle?: ViewStyle // 右边输入框样式
 }
 
-export const InputNumberRangView = observer((props: Props) => {
-    const { inputTitle, last, initialStartValue, initialEndValue, onChangeEndValue, onChangeStartValue, placeholderStr, placeholderEnd, style } = props
+export const InputView: FC<Props> = observer(props => {
+    const {
+        inputTitle,
+        last,
+        initialStartValue,
+        initialEndValue,
+        onChangeEndValue,
+        onChangeStartValue,
+        placeholderStr,
+        placeholderEnd,
+        style,
+        minValue,
+        maxValue,
+        leftStyle,
+        rightStyle,
+    } = props
+    // 最大值和最小值默认初始值
+    const maxVal = maxValue || 9999
+    const minVal = minValue || 0
 
     const [startValue, setStartValue] = useState(initialStartValue)
     const [endValue, setEndValue] = useState(initialEndValue)
@@ -35,6 +55,17 @@ export const InputNumberRangView = observer((props: Props) => {
             }
         }
     }
+    const getValue = (val: string) => {
+        let finalVal
+        if (+val >= maxVal) {
+            finalVal = maxVal.toString()
+        } else if (+val < minVal) {
+            finalVal = minVal.toString()
+        } else {
+            finalVal = val.replace(/[^\d]/g, '')
+        }
+        return finalVal
+    }
     return (
         <View>
             <Text style={styles.titleText}>{inputTitle}</Text>
@@ -42,23 +73,23 @@ export const InputNumberRangView = observer((props: Props) => {
                 <TextInput
                     placeholder={placeholderStr}
                     onChangeText={val => {
-                        setStartValue(val)
-                        onChangeStartValue && onChangeStartValue(val)
+                        setStartValue(getValue(val))
+                        onChangeStartValue && onChangeStartValue(getValue(val))
                     }}
                     onBlur={isAbler}
                     value={startValue}
-                    style={{ ...styles.inputSty }}
+                    style={{ ...styles.inputSty, ...leftStyle }}
                 />
                 <View style={styles.dpDivider} />
                 <TextInput
                     placeholder={placeholderEnd}
                     onChangeText={val => {
-                        setEndValue(val)
-                        onChangeEndValue && onChangeEndValue(val)
+                        setEndValue(getValue(val))
+                        onChangeEndValue && onChangeEndValue(getValue(val))
                     }}
                     onBlur={isAbler}
                     value={endValue}
-                    style={{ ...styles.inputSty }}
+                    style={{ ...styles.inputSty, ...rightStyle }}
                 />
             </View>
             {!last && <View style={{ backgroundColor: '#d8d8d8', marginLeft: 25, height: 0.5 }} />}
@@ -78,6 +109,8 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         color: '#d8d8d8',
         height: 25,
+        lineHeight: 25,
+        padding: 0,
         textAlign: 'center',
         width: 122.5,
     },

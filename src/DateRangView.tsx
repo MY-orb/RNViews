@@ -1,7 +1,7 @@
-import { Text, View, StyleSheet, ViewStyle } from 'react-native'
+import { Text, View, StyleSheet, ViewStyle, TextStyle } from 'react-native'
 import dayJs from 'dayjs'
 import React, { useState, useEffect, useMemo } from 'react'
-import { DatePicker } from '@ant-design/react-native'
+import { DatePicker, Toast } from '@ant-design/react-native'
 import { observer } from 'mobx-react'
 
 interface Props {
@@ -11,10 +11,12 @@ interface Props {
     onChangeEndDate?: (value) => void // 结束时间监听
     initialStartTime?: Date // 默认开始时间
     initialEndTime?: Date // 默认结束时间
-    style?: ViewStyle
     format?: string // 时间格式
     timeText?: string // 时间选择提示文字
     last?: boolean // 是否有底部分割线 true-无分割线
+    style?: ViewStyle // 输入组件View样式
+    leftStyle?: TextStyle // 左边文本样式
+    rightStyle?: TextStyle // 右边文本样式
 }
 
 // 时间初始值处理
@@ -23,10 +25,24 @@ const customTime = (time, format) => {
 }
 
 export const DateRangView = observer((props: Props) => {
-    const { minDate, maxDate, initialStartTime, initialEndTime, timeText, last, onChangeStartDate, onChangeEndDate, style, format } = props
+    const {
+        minDate,
+        maxDate,
+        initialStartTime,
+        initialEndTime,
+        timeText,
+        last,
+        onChangeStartDate,
+        onChangeEndDate,
+        style,
+        format,
+        leftStyle,
+        rightStyle,
+    } = props
+    const formatStr = format || 'YYYY-MM-DD'
+
     const [startTime, setStartTime] = useState(initialStartTime)
     const [endTime, setEndTime] = useState(initialEndTime)
-    const formatStr = format || 'YYYY-MM-DD'
     // componentDidUpdate 监听父组件的props值 进行相应的更新
     useEffect(() => {
         setStartTime(initialStartTime)
@@ -34,8 +50,8 @@ export const DateRangView = observer((props: Props) => {
     }, [initialStartTime, initialEndTime])
 
     // 依赖函数优化，去除多余渲染
-    const startTimeStr = useMemo(() => customTime(startTime, formatStr), [startTime])
-    const endTimeStr = useMemo(() => customTime(endTime, formatStr), [endTime])
+    const startTimeStr = useMemo(() => customTime(startTime, formatStr), [formatStr, startTime])
+    const endTimeStr = useMemo(() => customTime(endTime, formatStr), [endTime, formatStr])
 
     return (
         <View>
@@ -60,11 +76,15 @@ export const DateRangView = observer((props: Props) => {
                             .toDate()
                     }
                     onChange={value => {
+                        if (endTime && dayJs(value).isAfter(endTime)) {
+                            Toast.info('开始时间必须小于结束时间')
+                            return
+                        }
                         setStartTime(value)
                         onChangeStartDate && onChangeStartDate(value)
                     }}
                 >
-                    <Text style={styles.startTimeStyle}>{startTime ? startTimeStr : '开始日期'}</Text>
+                    <Text style={{ ...styles.timeStyle, ...leftStyle }}>{startTime ? startTimeStr : '开始日期'}</Text>
                 </DatePicker>
                 <View style={styles.dpDivider} />
                 <DatePicker
@@ -91,7 +111,7 @@ export const DateRangView = observer((props: Props) => {
                         onChangeEndDate && onChangeEndDate(value)
                     }}
                 >
-                    <Text style={styles.endTimeStyle}>{endTime ? endTimeStr : '结束日期'}</Text>
+                    <Text style={{ ...styles.timeStyle, ...rightStyle }}>{endTime ? endTimeStr : '结束日期'}</Text>
                 </DatePicker>
             </View>
             {!last && <View style={{ backgroundColor: '#d8d8d8', marginLeft: 25, height: 0.5 }} />}
@@ -113,16 +133,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 12.5,
         width: 40,
     },
-    endTimeStyle: {
-        backgroundColor: '#f2f2f2',
-        borderRadius: 12,
-        color: '#d8d8d8',
-        lineHeight: 25,
-        overflow: 'hidden',
-        textAlign: 'center',
-        width: 122.5,
-    },
-    startTimeStyle: {
+    timeStyle: {
         backgroundColor: '#f2f2f2',
         borderRadius: 12,
         color: '#d8d8d8',
