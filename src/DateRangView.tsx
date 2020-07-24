@@ -22,7 +22,7 @@ const customTime = (time, format) => {
     if (time) return dayJs(time).format(format)
 }
 
-export const StartEndDateSelectView = observer((props: Props) => {
+export const DateRangView = observer((props: Props) => {
     const { minDate, maxDate, initialStartTime, initialEndTime, timeText, last, onChangeStartDate, onChangeEndDate, style, format } = props
     const [startTime, setStartTime] = useState(initialStartTime)
     const [endTime, setEndTime] = useState(initialEndTime)

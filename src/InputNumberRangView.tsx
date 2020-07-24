@@ -17,7 +17,7 @@ interface Props {
     placeholderEnd?: string // 结束输入框的提示语
 }
 
-export const StartEndNumSelectView = observer((props: Props) => {
+export const InputNumberRangView = observer((props: Props) => {
     const { inputTitle, last, initialStartValue, initialEndValue, onChangeEndValue, onChangeStartValue, placeholderStr, placeholderEnd, style } = props
 
     const [startValue, setStartValue] = useState(initialStartValue)
