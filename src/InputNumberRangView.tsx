@@ -4,20 +4,32 @@ import { observer } from 'mobx-react'
 import { Toast } from '@ant-design/react-native'
 
 interface Props {
-    inputTitle: string // 标题
-    initialStartValue?: string // 初始开始值
-    initialEndValue?: string // 初始结束值
-    onChangeStartValue?: (value) => void // 开始值监听
-    onChangeEndValue?: (value) => void // 结束值监听
-
-    minValue?: number // 最小输入值
-    maxValue?: number // 最大输入值
-    last?: boolean // 是否有底部分割线
-    placeholderStr?: string // 开始输入框的提示语
-    placeholderEnd?: string // 结束输入框的提示语
-    style?: ViewStyle // 输入组件View样式
-    leftStyle?: ViewStyle // 左边输入框样式
-    rightStyle?: ViewStyle // 右边输入框样式
+    // 标题
+    inputTitle?: string
+    // 初始开始值
+    initialStartValue?: number
+    // 初始结束值
+    initialEndValue?: number
+    // 开始值监听
+    onChangeStartValue?: (value) => void
+    // 结束值监听
+    onChangeEndValue?: (value) => void
+    // 最小输入值
+    minValue?: number
+    // 最大输入值
+    maxValue?: number
+    // 是否有底部分割线
+    last?: boolean
+    // 开始输入框的提示语
+    placeholderStr?: string
+    // 结束输入框的提示语
+    placeholderEnd?: string
+    // 输入组件View样式
+    style?: ViewStyle
+    // 左边输入框样式
+    leftStyle?: ViewStyle
+    // 右边输入框样式
+    rightStyle?: ViewStyle
 }
 
 export const InputView: FC<Props> = observer(props => {
@@ -50,7 +62,7 @@ export const InputView: FC<Props> = observer(props => {
 
     const isAbler = () => {
         if (startValue && endValue) {
-            if (parseFloat(startValue) > parseFloat(endValue)) {
+            if (startValue > endValue) {
                 Toast.info('最小值不能大于最大值')
             }
         }
@@ -68,27 +80,29 @@ export const InputView: FC<Props> = observer(props => {
     }
     return (
         <View>
-            <Text style={styles.titleText}>{inputTitle}</Text>
+            {inputTitle && <Text style={styles.titleText}>{inputTitle}</Text>}
             <View style={[styles.inputWrapper, style]}>
                 <TextInput
+                    placeholderTextColor="#d8d8d8"
                     placeholder={placeholderStr}
                     onChangeText={val => {
                         setStartValue(getValue(val))
                         onChangeStartValue && onChangeStartValue(getValue(val))
                     }}
                     onBlur={isAbler}
-                    value={startValue}
+                    value={startValue?.toString()}
                     style={{ ...styles.inputSty, ...leftStyle }}
                 />
                 <View style={styles.dpDivider} />
                 <TextInput
+                    placeholderTextColor="#d8d8d8"
                     placeholder={placeholderEnd}
                     onChangeText={val => {
                         setEndValue(getValue(val))
                         onChangeEndValue && onChangeEndValue(getValue(val))
                     }}
                     onBlur={isAbler}
-                    value={endValue}
+                    value={endValue?.toString()}
                     style={{ ...styles.inputSty, ...rightStyle }}
                 />
             </View>
@@ -102,17 +116,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#d8d8d8',
         height: 0.5,
         marginHorizontal: 12.5,
-        width: 40,
+        width: global.windowWidth * 0.11,
     },
     inputSty: {
         backgroundColor: '#f2f2f2',
         borderRadius: 12,
-        color: '#d8d8d8',
+        color: '#9b9b9b',
         height: 25,
-        lineHeight: 25,
         padding: 0,
         textAlign: 'center',
-        width: 122.5,
+        width: global.windowWidth * 0.33,
     },
     inputWrapper: {
         alignItems: 'center',

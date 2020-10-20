@@ -4,7 +4,7 @@
   "description": "RN常用组件",
   "main": "src/index.tsx",
   "scripts": {
-    "postversion": "git push --tags && git push && npm publish"
+    "postversion": ".gitignore push --tags && git push && npm publish"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,9 @@
     "dayjs": "^1.8.29",
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8",
+    "react-native-linear-gradient": "2.5.6",
     "react": "16.8.3",
+    "react-native-config-reader": "3.0.1",
     "react-native": "0.59.9"
   },
   "jest": {
